@@ -2,10 +2,20 @@ import React, { useState, useEffect } from 'react';
 import Modal from '../../components/UI/Modal';
 import Layout from '../../components/Layout';
 import Input from '../../components/UI/Input';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Table } from 'react-bootstrap';
 import linearCategories from '../../helpers/linearCategories';
 import { useSelector, useDispatch } from 'react-redux';
-import { createPage } from '../../actions';
+import { createPage, deletePageById } from '../../actions';
+import {
+    IoIosCheckboxOutline,
+    IoIosCheckbox,
+    IoIosArrowForward,
+    IoIosArrowDown,
+    IoIosAdd,
+    IoIosTrash,
+    IoIosCloudUpload
+} from 'react-icons/io';
+
 
 /**
 * @author
@@ -24,7 +34,7 @@ const NewPage = (props) => {
     const [banners, setBanners] = useState([]);
     const [products, setProducts] = useState([]);
     const dispatch = useDispatch();
-    const page = useSelector(state => state.page);
+    const page = useSelector((state) => state.page);
 
 
     useEffect(() => {
@@ -33,7 +43,7 @@ const NewPage = (props) => {
 
     useEffect(() => {
         console.log(page);
-        if(!page.loading){
+        if (!page.loading) {
             setCreateModal(false);
             setTitle('');
             setCategoryId('');
@@ -62,7 +72,7 @@ const NewPage = (props) => {
     const submitPageForm = (e) => {
         //e.target.preventDefault();
 
-        if(title === ""){
+        if (title === "") {
             alert('Title is required');
             setCreateModal(false);
             return;
@@ -82,7 +92,7 @@ const NewPage = (props) => {
 
         dispatch(createPage(form));
 
-        
+
     }
 
     const renderCreatePageModal = () => {
@@ -108,7 +118,7 @@ const NewPage = (props) => {
                                     )
                                 }
                             </select> */}
-                            <Input 
+                            <Input
                                 type="select"
                                 value={categoryId}
                                 onChange={onCategoryChange}
@@ -141,8 +151,8 @@ const NewPage = (props) => {
                     </Row>
 
                     {
-                            banners.length > 0 ? 
-                            banners.map((banner, index) => 
+                        banners.length > 0 ?
+                            banners.map((banner, index) =>
                                 <Row key={index}>
                                     <Col>{banner.name}</Col>
                                 </Row>
@@ -151,8 +161,8 @@ const NewPage = (props) => {
                     <Row>
                         <Col>
                             <Input
-                                className="form-control" 
-                                type="file" 
+                                className="form-control"
+                                type="file"
                                 name="banners"
                                 onChange={handleBannerImages}
                             />
@@ -160,46 +170,101 @@ const NewPage = (props) => {
                     </Row>
 
                     {
-                            products.length > 0 ? 
-                            products.map((product, index) => 
+                        products.length > 0 ?
+                            products.map((product, index) =>
                                 <Row key={index}>
                                     <Col>{product.name}</Col>
                                 </Row>
                             ) : null
-                        }
+                    }
                     <Row>
                         <Col>
-                            <Input 
+                            <Input
                                 className="form-control"
-                                type="file" 
+                                type="file"
                                 name="products"
                                 onChange={handleProductImages}
                             />
                         </Col>
                     </Row>
 
-                    
+
 
                 </Container>
 
 
             </Modal>
+
         );
     }
 
+    const renderPages = () => {
+        return (
+            <Table style={{ fontSize: 12 }} responsive="sm">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {page.length > 0
+                        ? page.map((page,i) => (
+                            <tr key={page}>
+                                <td>{i+1}</td>
+                                <td>{page}</td>
+                                <td>{page.category._id}</td>
+                                <td>{page.description}</td>
+                                <td>
+                                    <button
+                                        onClick={() => {
+                                            const payload = {
+                                                pageId: page._id,
+                                            };
+                                            dispatch(deletePageById(payload));
+                                        }}
+                                    >
+                                        delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))
+                        :null}
+                </tbody>
+            </Table>
+        );
+    };
 
     return (
         <Layout sidebar>
             {
-                page.loading ? 
-                <p>Creating Page...please wait</p>
-                :
-                <>
-                    {renderCreatePageModal()}
-                    <button onClick={() => setCreateModal(true)}>Create Page</button>
-                </>
+                page.loading ?
+                    <p>Creating Page...please wait</p>
+                    :
+                    <>
+                        {renderCreatePageModal()}
+                        <Container>
+                            <Row>
+                                <Col md={12}>
+                                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                        <h3>Pages</h3>
+                                        <button onClick={() => setCreateModal(true)}>Add</button>
+                                    </div>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>{renderPages()}</Col>
+                            </Row>
+                        </Container>
+
+
+                    </>
             }
-            
+
         </Layout>
     )
 

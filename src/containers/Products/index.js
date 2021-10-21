@@ -76,9 +76,9 @@ const Products = (props) => {
         </thead>
         <tbody>
           {product.products.length > 0
-            ? product.products.map((product) => (
+            ? product.products.map((product,i) => (
                 <tr key={product._id}>
-                  <td>2</td>
+                  <td>{i+1}</td>
                   <td>{product.name}</td>
                   <td>{product.price}</td>
                   <td>{product.quantity}</td>

@@ -1,5 +1,5 @@
-const baseUrl = process.env.API || "https://nxt-gen-backend.herokuapp.com";
-//const baseUrl = "http://localhost:2000";
+// const baseUrl = process.env.API || "https://nxt-gen-backend.herokuapp.com";
+const baseUrl = "http://localhost:2000";
 
 export const api = `${baseUrl}/api`;
 
