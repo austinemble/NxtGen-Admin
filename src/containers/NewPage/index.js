@@ -208,12 +208,15 @@ const NewPage = (props) => {
                         <th>Category</th>
                         <th>Description</th>
                         <th>Actions</th>
+                        <th>Length:{page.page.length}</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     {page.length > 0
-                        ? page.map((page,i) => (
+                        ? 
+                        page.map((page,i) => (
+            
                             <tr key={page}>
                                 <td>{i+1}</td>
                                 <td>{page}</td>
